@@ -65,9 +65,9 @@
   (let [{:keys [db-name migration-date] :as input-data} (some-> body read-edn)]
     {:status 200
      :headers {"Content-Type" "application/edn"} 
-     :body (-> input-data
-               (initialize-new-ion-db db-name migration-date)
-               encode-transit)}))
+     :body (-> 
+            (initialize-new-ion-db db-name migration-date)
+            :new-db encode-transit)}))
 (def init-db
   "API Gateway web service ion for fn-init-db"
   (apigw/ionize fn-init-db))
