@@ -1,0 +1,3 @@
+(ns cecab.tools.shushupi
+  (:require
+   [datomic.client.api :as d]))

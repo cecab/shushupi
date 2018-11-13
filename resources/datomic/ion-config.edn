@@ -1,0 +1,8 @@
+{:allow [
+         ;; Web applications
+         cecab.tools.shushupi/init-db]
+ :lambdas
+ {:shushupi-init-db
+  {:fn cecab.tools.shushupi/init-db
+   :description "Initialize an Ion DB prior migration"}}
+ :app-name "kerapp"}
