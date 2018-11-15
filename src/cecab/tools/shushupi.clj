@@ -3,7 +3,7 @@
    [datomic.client.api :as d]
    [cognitect.transit :as transit]
    [cecab.tools.common :as common]
-   [cecab.tools.boa :as boa]
+   [cecab.tools.wari :as wari]
    [datomic.ion.lambda.api-gateway :as apigw]))
 (import [java.io ByteArrayInputStream ByteArrayOutputStream])
 
@@ -55,7 +55,7 @@
     {:status 200
      :headers {"Content-Type" "application/edn"} 
      :body (->
-            (boa/apply-tx input-data)
+            (wari/apply-tx input-data)
             :tempids vals count
             common/encode-transit)}))
 
