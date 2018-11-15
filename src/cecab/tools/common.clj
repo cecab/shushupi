@@ -1,7 +1,25 @@
 (ns cecab.tools.common
   (:require [cognitect.transit :as transit]
-            [datomic.api :as da]))
+            [datomic.api :as da]
+            [datomic.client.api :as d]))
 (import [java.io ByteArrayInputStream ByteArrayOutputStream])
+
+
+(def get-client
+  "This function will return a local implementation of the client
+  interface when run on a Datomic compute node. If you want to call
+  locally, fill in the correct values in the map."
+  (memoize #(d/client {:server-type :ion
+                       :region "us-east-2"
+                       :system "cloudker"
+                       :query-group "cloudker"
+                       :endpoint "http://entry.cloudker.us-east-2.datomic.net:8182"
+                       :proxy-port 8182})))
+
+(defn get-conn-ion
+  "Returns a connection to the ION db-name"
+  [db-name]
+  (d/connect (get-client) {:db-name db-name}))
 
 
 (defn read-edn

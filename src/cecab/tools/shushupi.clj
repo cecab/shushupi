@@ -6,22 +6,10 @@
    [datomic.ion.lambda.api-gateway :as apigw]))
 (import [java.io ByteArrayInputStream ByteArrayOutputStream])
 
-(def get-client
-  "This function will return a local implementation of the client
-  interface when run on a Datomic compute node. If you want to call
-  locally, fill in the correct values in the map."
-  (memoize #(d/client {:server-type :ion
-                       :region "us-east-2"
-                       :system "cloudker"
-                       :query-group "cloudker"
-                       :endpoint "http://entry.cloudker.us-east-2.datomic.net:8182"
-                       :proxy-port 8182})))
 
 
-(defn get-conn-ion
-  "Returns a connection to the ION db-name"
-  [db-name]
-  (d/connect (get-client) {:db-name db-name}))
+
+
 
 (defn initialize-new-ion-db
   "Create the  database ION db-name.Then, transact the attributes
@@ -29,10 +17,10 @@
    defined by migration-date"
   [db-name migration-date]
   {:new-db 
-   (d/create-database (get-client) {:db-name db-name})
+   (d/create-database (common/get-client) {:db-name db-name})
    :init-transact
    (d/transact
-    (get-conn-ion db-name)
+    (common/get-conn-ion db-name)
     {:tx-data
      [{:db/id "datomic.tx"
        :db/txInstant migration-date}
@@ -61,12 +49,12 @@
   "Web handler that apply a transaction taken the date and datoms from 
    body"
   [{:keys [headers body]}]
-  (let [{:keys [tx-datoms] :as input-data}
+  (let [{:keys [map-datatypes tx-datoms] :as input-data}
         (some-> body common/read-edn)]
     {:status 200
      :headers {"Content-Type" "application/edn"} 
      :body (-> 
-            (count tx-datoms)
+            [(count tx-datoms) (count map-datatypes)]
             common/encode-transit)}))
 
 (def init-db
