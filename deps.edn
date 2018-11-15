@@ -5,6 +5,8 @@
  :aliases
  {:dev {:extra-deps {com.datomic/client-cloud {:mvn/version "0.8.63"}
                      com.datomic/ion-dev {:mvn/version "0.9.176"}
+                     ;; --- To send Datoms via HTTP ---
+                     http-kit {:mvn/version "2.2.0"}
                      ;; --- For NREPL
                      cider/cider-nrepl {:mvn/version "0.17.0"}
                      org.clojure/tools.nrepl {:mvn/version "0.2.12"}}}}}

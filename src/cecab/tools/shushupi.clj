@@ -2,6 +2,7 @@
   (:require
    [datomic.client.api :as d]
    [cognitect.transit :as transit]
+   [cecab.tools.common :as common]
    [datomic.ion.lambda.api-gateway :as apigw]))
 (import [java.io ByteArrayInputStream ByteArrayOutputStream])
 
@@ -46,28 +47,20 @@
        :db/cardinality :db.cardinality/one}]})})
 
 
-(defn read-edn
-  "A helper function, parse the input-stream a CLJ code."
-  [input-stream]
-  (some-> input-stream slurp read-string))
 
-(defn encode-transit
-  "Encode clj-value as transit format."
-  [clj-value]
-  (let [out (ByteArrayOutputStream. 4096)
-        writer (transit/writer out :json)
-        _ (transit/write writer clj-value)]
-    (.toString out)))
+
+
+
 
 (defn fn-init-db
   "Web handler that create the database prior to migration."
   [{:keys [headers body]}]
-  (let [{:keys [db-name migration-date] :as input-data} (some-> body read-edn)]
+  (let [{:keys [db-name migration-date] :as input-data} (some-> body common/read-edn)]
     {:status 200
      :headers {"Content-Type" "application/edn"} 
      :body (-> 
             (initialize-new-ion-db db-name migration-date)
-            :new-db encode-transit)}))
+            :new-db common/encode-transit)}))
 (def init-db
   "API Gateway web service ion for fn-init-db"
   (apigw/ionize fn-init-db))
