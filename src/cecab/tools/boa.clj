@@ -262,7 +262,7 @@
   ;; Sent a request.
   (def mig-1
     {:tx-datoms the-datoms
-     :map-datatypes (get-map-datatypes the-datoms)})
+     :map-datatypes (get-map-datatypes pro-db the-datoms)})
   (def url-apigateway-apply-tx
     "https://3lynibgz02.execute-api.us-east-2.amazonaws.com/dev/datomic")
   ;; --- 

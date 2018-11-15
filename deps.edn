@@ -1,6 +1,10 @@
 {:paths ["src" "resources"]
  :deps {com.datomic/ion {:mvn/version "0.9.26"}
         org.clojure/clojure {:mvn/version "1.9.0"}
+        org.slf4j/jcl-over-slf4j #:mvn{:version "1.7.14"},
+        com.fasterxml.jackson.core/jackson-core #:mvn{:version "2.9.5"},
+        org.slf4j/jul-to-slf4j #:mvn{:version "1.7.14"},
+        org.slf4j/slf4j-api #:mvn{:version "1.7.14"}
         com.datomic/datomic-pro {:mvn/version  "0.9.5554"
                                  :exclusions [joda-time]}}
  :mvn/repos {"datomic-cloud" {:url "s3://datomic-releases-1fc2183a/maven/releases"}}
