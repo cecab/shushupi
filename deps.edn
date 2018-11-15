@@ -4,9 +4,7 @@
         org.slf4j/jcl-over-slf4j #:mvn{:version "1.7.14"},
         com.fasterxml.jackson.core/jackson-core #:mvn{:version "2.9.5"},
         org.slf4j/jul-to-slf4j #:mvn{:version "1.7.14"},
-        org.slf4j/slf4j-api #:mvn{:version "1.7.14"}
-        com.datomic/datomic-pro {:mvn/version  "0.9.5554"
-                                 :exclusions [joda-time]}}
+        org.slf4j/slf4j-api #:mvn{:version "1.7.14"}}
  :mvn/repos {"datomic-cloud" {:url "s3://datomic-releases-1fc2183a/maven/releases"}}
  :aliases
  {:dev {:extra-deps {com.datomic/client-cloud {:mvn/version "0.8.63"}
