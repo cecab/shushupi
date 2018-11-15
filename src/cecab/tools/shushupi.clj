@@ -3,6 +3,7 @@
    [datomic.client.api :as d]
    [cognitect.transit :as transit]
    [cecab.tools.common :as common]
+   [cecab.tools.boa :as boa]
    [datomic.ion.lambda.api-gateway :as apigw]))
 (import [java.io ByteArrayInputStream ByteArrayOutputStream])
 
@@ -49,12 +50,13 @@
   "Web handler that apply a transaction taken the date and datoms from 
    body"
   [{:keys [headers body]}]
-  (let [{:keys [map-datatypes tx-datoms] :as input-data}
+  (let [{:keys [db-name map-datatypes tx-datoms] :as input-data}
         (some-> body common/read-edn)]
     {:status 200
      :headers {"Content-Type" "application/edn"} 
-     :body (-> 
-            [(count tx-datoms) (count map-datatypes)]
+     :body (->
+            (boa/apply-tx input-data)
+            :tempids vals count
             common/encode-transit)}))
 
 (def init-db
@@ -65,7 +67,3 @@
   "API Gateway web service ion for fn-apply-tx"
   (apigw/ionize fn-apply-tx))
 
-(comment
-  ;; --
-  (get-client)
-  )
