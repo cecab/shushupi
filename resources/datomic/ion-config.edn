@@ -1,8 +1,13 @@
 {:allow [
          ;; Web applications
-         cecab.tools.shushupi/init-db]
+         cecab.tools.shushupi/init-db
+         cecab.tools.shushupi/apply-tx]
  :lambdas
  {:shushupi-init-db
   {:fn cecab.tools.shushupi/init-db
-   :description "Initialize an Ion DB prior migration"}}
+   :description "Initialize an Ion DB prior migration"}
+  ;;--- Processor for datoms --
+  :shushupi-apply-tx
+  {:fn cecab.tools.shushupi/apply-tx
+   :description "Process the datoms received and apply them to Ion"}}
  :app-name "kerapp"}

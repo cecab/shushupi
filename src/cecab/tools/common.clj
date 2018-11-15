@@ -1,5 +1,6 @@
 (ns cecab.tools.common
-  (:require [cognitect.transit :as transit]))
+  (:require [cognitect.transit :as transit]
+            [datomic.api :as da]))
 (import [java.io ByteArrayInputStream ByteArrayOutputStream])
 
 
@@ -21,3 +22,15 @@
         writer (transit/writer out :json)
         _ (transit/write writer clj-value)]
     (.toString out)))
+
+(defn get-datoms-from-tx
+  "Collect the datoms from a tx taking the history from db"
+  [db tx]
+  (da/q '[:find ?e ?attr ?v ?added
+          :in $ ?tx
+          :where
+          [?e ?a ?v ?tx ?added]
+          [?a :db/ident ?attr ]
+          [?tx :db/txInstant ?cuando]]
+        (da/history db)
+        tx))

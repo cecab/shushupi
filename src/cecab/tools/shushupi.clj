@@ -24,8 +24,8 @@
   (d/connect (get-client) {:db-name db-name}))
 
 (defn initialize-new-ion-db
-  "Create the  database ION db-name. Transact the attributes
-   for migration logging. The attributes are create with a time
+  "Create the  database ION db-name.Then, transact the attributes
+   for migration logging. The attributes are created with a time
    defined by migration-date"
   [db-name migration-date]
   {:new-db 
@@ -47,11 +47,6 @@
        :db/cardinality :db.cardinality/one}]})})
 
 
-
-
-
-
-
 (defn fn-init-db
   "Web handler that create the database prior to migration."
   [{:keys [headers body]}]
@@ -61,9 +56,26 @@
      :body (-> 
             (initialize-new-ion-db db-name migration-date)
             :new-db common/encode-transit)}))
+
+(defn fn-apply-tx
+  "Web handler that apply a transaction taken the date and datoms from 
+   body"
+  [{:keys [headers body]}]
+  (let [{:keys [tx-datoms] :as input-data}
+        (some-> body common/read-edn)]
+    {:status 200
+     :headers {"Content-Type" "application/edn"} 
+     :body (-> 
+            (count tx-datoms)
+            common/encode-transit)}))
+
 (def init-db
   "API Gateway web service ion for fn-init-db"
   (apigw/ionize fn-init-db))
+
+(def apply-tx
+  "API Gateway web service ion for fn-apply-tx"
+  (apigw/ionize fn-apply-tx))
 
 (comment
   ;; --

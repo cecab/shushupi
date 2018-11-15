@@ -1,6 +1,8 @@
 {:paths ["src" "resources"]
  :deps {com.datomic/ion {:mvn/version "0.9.26"}
-        org.clojure/clojure {:mvn/version "1.9.0"}}
+        org.clojure/clojure {:mvn/version "1.9.0"}
+        com.datomic/datomic-pro {:mvn/version  "0.9.5554"
+                                 :exclusions [joda-time]}}
  :mvn/repos {"datomic-cloud" {:url "s3://datomic-releases-1fc2183a/maven/releases"}}
  :aliases
  {:dev {:extra-deps {com.datomic/client-cloud {:mvn/version "0.8.63"}
