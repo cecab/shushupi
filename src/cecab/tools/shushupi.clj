@@ -56,7 +56,6 @@
      :headers {"Content-Type" "application/edn"} 
      :body (->
             (wari/apply-tx input-data)
-            :tempids vals count
             common/encode-transit)}))
 
 (def init-db
