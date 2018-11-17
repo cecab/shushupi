@@ -36,15 +36,17 @@
        :db/cardinality :db.cardinality/one}]})})
 
 
-(defn fn-init-db
+(defn fn-create-db
   "Web handler that create the database prior to migration."
   [{:keys [headers body]}]
-  (let [{:keys [db-name migration-date] :as input-data} (some-> body common/read-edn)]
+  (let [{:keys [db-name migration-date] :as input-data}
+        (some-> body common/read-edn)]
     {:status 200
      :headers {"Content-Type" "application/edn"} 
-     :body (-> 
+     :body (->
             (initialize-new-ion-db db-name migration-date)
-            :new-db common/encode-transit)}))
+            :new-db
+            common/encode-transit)}))
 
 (defn fn-apply-tx
   "Web handler that apply a transaction taken the date and datoms from 
@@ -56,11 +58,12 @@
      :headers {"Content-Type" "application/edn"} 
      :body (->
             (wari/apply-tx input-data)
+            (select-keys [:tempids :error])
             common/encode-transit)}))
 
-(def init-db
+(def create-db
   "API Gateway web service ion for fn-init-db"
-  (apigw/ionize fn-init-db))
+  (apigw/ionize fn-create-db))
 
 (def apply-tx
   "API Gateway web service ion for fn-apply-tx"

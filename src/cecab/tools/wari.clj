@@ -7,7 +7,8 @@
   "Build a transaction from los-datoms and apply it as the original 
    datetime to db-name Cloud DB"
   [{:keys [db-name tx-datoms  map-datatypes] :as all-data}]
-  (let [los-datoms tx-datoms
+  (let [{:keys [db-name tx-datoms  map-datatypes]} all-data
+        los-datoms tx-datoms
         ion-db  (d/db (common/get-conn-ion db-name))
         los-tipos
         (reduce
@@ -146,14 +147,14 @@
          {:db/id "datomic.tx"
           :pifaho/orig-tx eid-tx}
          (filter #(= eid-tx (first %)) los-datoms))]
-    (try
-      (d/transact
-       (common/get-conn-ion db-name)
-       {:tx-data (vec
-                  (concat
-                   [new-tx-ion]
-                   (concat (:added new-tx) (:retract new-tx))))})
-      (catch Exception ex
-        {:error  (.getMessage ex)}))))
+    (d/transact
+     (common/get-conn-ion db-name)
+     {
+      :tx-data (vec
+                (concat                
+                 (concat (:added new-tx) (:retract new-tx))
+                 [new-tx-ion]))})))
+
+
 
 

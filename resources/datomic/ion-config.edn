@@ -1,10 +1,10 @@
 {:allow [
          ;; Web applications
-         cecab.tools.shushupi/init-db
+         cecab.tools.shushupi/create-db
          cecab.tools.shushupi/apply-tx]
  :lambdas
- {:shushupi-init-db
-  {:fn cecab.tools.shushupi/init-db
+ {:shushupi-create-db
+  {:fn cecab.tools.shushupi/create-db
    :description "Initialize an Ion DB prior migration"}
   ;;--- Processor for datoms --
   :shushupi-apply-tx
